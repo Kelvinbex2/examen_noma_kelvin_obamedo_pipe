@@ -1,24 +1,40 @@
 package es.etg.psp.lanzador;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class Lanzador {
-    public final static String[] COMMANDO = {"/bin/sh", "-c"};
+    
     public final static String MSG_BUENO = "Ha ido bien";
     public final static String ERR_MALO = "No ha ido bien";
-    private static final String LS = "ls";
+    public final static String TERMINAL = "> ";
+
     
-        public static void main(String[] args) {
-    
-            int exitVal = 0;
-            StringBuilder build = new StringBuilder();
-            String line = "";
-            try {
-                
-            
-            Process process = Runtime.getRuntime().exec(args);
+
+    public static void main(String[] args) {
+      
+
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print(TERMINAL);
+            String commando = scanner.nextLine();
+            ejecutar(commando);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       
+
+    }
+
+    public static int ejecutar(String comand) {
+        int exitVal = 0;
+        StringBuilder build = new StringBuilder();
+        String line = "";
+        try {
+
+            Process process = Runtime.getRuntime().exec(comand);
             BufferedReader read = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((line = read.readLine()) != null) {
                 build.append(line).append(System.lineSeparator());
@@ -31,13 +47,11 @@ public class Lanzador {
                 System.out.println(ERR_MALO);
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
 
             e.printStackTrace();
         }
-
-        
+        return exitVal;
     }
 
-    
 }
